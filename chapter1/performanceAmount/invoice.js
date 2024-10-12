@@ -10,7 +10,7 @@ export function statement(invoice, plays) {
     minimumFractionDigits: 2
   }).format
 
-  function amountFor(aPerformance, play) {
+  function amountFor(aPerformance) {
     let result = 0
     switch (playFor(aPerformance).type) {
       case 'tragedy':
@@ -36,10 +36,8 @@ export function statement(invoice, plays) {
   function playFor(aPerformance) {
     return plays[aPerformance.playID]
   }
-  ㄱ
-  for (let perf of invoice.performances) {
-    let thisAmount = amountFor(perf, playFor(perf)) // play 같은 경우 perf를 통해 얻을 수 있으므로 play 매개변수를 제거해도 된다
 
+  for (let perf of invoice.performances) {
     // 포인트 적립
     volumneCredits += Math.max(perf.audience - 30, 0)
 
@@ -47,8 +45,8 @@ export function statement(invoice, plays) {
     if ('comedy' == playFor(perf).type) volumneCredits += Math.floor(perf.audience / 5)
 
     // 청구내역 출력
-    result += `${playFor(perf).name} : ${format(thisAmount / 100)} (${perf.audience}석)\n`
-    totalAmount += thisAmount
+    result += `${playFor(perf).name} : ${format(amountFor(perf) / 100)} (${perf.audience}석)\n`
+    totalAmount += amountFor(perf)
   }
 
   result += `총액: ${format(totalAmount / 100)}\n`
