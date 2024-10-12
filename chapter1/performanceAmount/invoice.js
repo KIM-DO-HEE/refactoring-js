@@ -36,7 +36,7 @@ export function statement(invoice, plays) {
   function playFor(aPerformance) {
     return plays[aPerformance.playID]
   }
-
+  ㄱ
   for (let perf of invoice.performances) {
     let thisAmount = amountFor(perf, playFor(perf)) // play 같은 경우 perf를 통해 얻을 수 있으므로 play 매개변수를 제거해도 된다
 
@@ -44,10 +44,10 @@ export function statement(invoice, plays) {
     volumneCredits += Math.max(perf.audience - 30, 0)
 
     // 희극관객 5명마다 추가 포인트를 제공
-    if ('comedy' == play.type) volumneCredits += Math.floor(perf.audience / 5)
+    if ('comedy' == playFor(perf).type) volumneCredits += Math.floor(perf.audience / 5)
 
     // 청구내역 출력
-    result += `${play.name} : ${format(thisAmount / 100)} (${perf.audience}석)\n`
+    result += `${playFor(perf).name} : ${format(thisAmount / 100)} (${perf.audience}석)\n`
     totalAmount += thisAmount
   }
 
