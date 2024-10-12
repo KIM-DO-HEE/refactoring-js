@@ -33,10 +33,12 @@ export function statement(invoice, plays) {
     return result
   }
 
-  for (let perf of invoice.performances) {
-    const play = plays[perf.playID]
+  function playFor(aPerformance) {
+    return plays[aPerformance.playID]
+  }
 
-    let thisAmount = amountFor(perf, play)
+  for (let perf of invoice.performances) {
+    let thisAmount = amountFor(perf, playFor(perf)) // play 같은 경우 perf를 통해 얻을 수 있으므로 play 매개변수를 제거해도 된다
 
     // 포인트 적립
     volumneCredits += Math.max(perf.audience - 30, 0)
