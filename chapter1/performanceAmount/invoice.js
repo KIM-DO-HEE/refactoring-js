@@ -1,8 +1,13 @@
 export function statement(invoice, plays) {
   const statementData = {}
   statementData.customer = invoice.customer // 고객 데이터를 중간 데이터로 옮김
-  statementData.performances = invoice.performances
+  statementData.performances = invoice.performances.map(enrichPerformance)
   return renderPlainText(statementData, plays) // 중간 데이터 구조를 인수로 전달
+
+  function enrichPerformance(aPerformance) {
+    const result = Object.assign({}, aPerformance)
+    return result
+  }
 }
 
 // 공연료 청구서 출력
