@@ -8,6 +8,7 @@ export function statement(invoice, plays) {
     const result = Object.assign({}, aPerformance)
     result.play = playFor(result)
     result.amount = amountFor(result)
+    result.volumneCredits = volumneCreditsFor(result)
     return result
   }
 
@@ -38,6 +39,15 @@ export function statement(invoice, plays) {
 
     return result
   }
+
+  function volumneCreditsFor(aPerformance) {
+    let volumneCredits = 0
+    // 포인트 적립
+    volumneCredits += Math.max(aPerformance.audience - 30, 0)
+    // 희극관객 5명마다 추가 포인트를 제공
+    if ('comedy' == aPerformance.play.type) volumneCredits += Math.floor(aPerformance.audience / 5)
+    return volumneCredits
+  }
 }
 
 // 공연료 청구서 출력
@@ -60,15 +70,6 @@ export function renderPlainText(data, plays) {
     }).format(aNumber / 100)
   }
 
-  function volumneCreditsFor(aPerformance) {
-    let volumneCredits = 0
-    // 포인트 적립
-    volumneCredits += Math.max(aPerformance.audience - 30, 0)
-    // 희극관객 5명마다 추가 포인트를 제공
-    if ('comedy' == aPerformance.play.type) volumneCredits += Math.floor(aPerformance.audience / 5)
-    return volumneCredits
-  }
-
   function totalAmount() {
     let result = 0
     for (let perf of data.performances) {
@@ -82,7 +83,7 @@ export function renderPlainText(data, plays) {
     let result = 0 // 변수 선언(초기화)을 반복문 앞으로 이동 : 문장 슬라이드
     // 값 누적 로직을 별도 for로 분리
     for (let perf of data.performances) {
-      result += volumneCreditsFor(perf)
+      result += perf.volumneCredits
     }
 
     return result
