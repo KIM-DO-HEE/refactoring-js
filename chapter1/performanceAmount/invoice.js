@@ -1,5 +1,9 @@
-// 공연료 청구서 출력
 export function statement(invoice, plays) {
+  return renderPlainText(invoice, plays)
+}
+
+// 공연료 청구서 출력
+export function renderPlainText(invoice, plays) {
   let result = `청구 내역 (고객명) : ${invoice.customer} \n`
   for (let perf of invoice.performances) {
     // 청구내역 출력
