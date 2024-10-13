@@ -1,14 +1,15 @@
 export function statement(invoice, plays) {
   const statementData = {}
   statementData.customer = invoice.customer // 고객 데이터를 중간 데이터로 옮김
-  return renderPlainText(statementData, invoice, plays) // 중간 데이터 구조를 인수로 전달
+  statementData.performances = invoice.performances
+  return renderPlainText(statementData, plays) // 중간 데이터 구조를 인수로 전달
 }
 
 // 공연료 청구서 출력
-export function renderPlainText(data, invoice, plays) {
+export function renderPlainText(data, plays) {
   // 중간 데이터 구조를 인수로 전달
-  let result = `청구 내역 (고객명) : ${invoice.customer} \n`
-  for (let perf of invoice.performances) {
+  let result = `청구 내역 (고객명) : ${data.customer} \n`
+  for (let perf of data.performances) {
     // 청구내역 출력
     result += `${playFor(perf).name} : ${usd(amountFor(perf))} (${perf.audience}석)\n`
   }
@@ -63,7 +64,7 @@ export function renderPlainText(data, invoice, plays) {
 
   function totalAmount() {
     let result = 0
-    for (let perf of invoice.performances) {
+    for (let perf of data.performances) {
       result += amountFor(perf)
     }
 
@@ -73,7 +74,7 @@ export function renderPlainText(data, invoice, plays) {
   function totalVolumeCredits() {
     let result = 0 // 변수 선언(초기화)을 반복문 앞으로 이동 : 문장 슬라이드
     // 값 누적 로직을 별도 for로 분리
-    for (let perf of invoice.performances) {
+    for (let perf of data.performances) {
       result += volumneCreditsFor(perf)
     }
 
