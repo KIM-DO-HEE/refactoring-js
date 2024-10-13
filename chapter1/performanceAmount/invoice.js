@@ -1,10 +1,15 @@
 export function statement(invoice, plays) {
-  const statementData = {}
-  statementData.customer = invoice.customer // 고객 데이터를 중간 데이터로 옮김
-  statementData.performances = invoice.performances.map(enrichPerformance)
-  statementData.totalAmount = totalAmount(statementData)
-  statementData.totalVolumeCredits = totalVolumeCredits(statementData)
-  return renderPlainText(statementData, plays) // 중간 데이터 구조를 인수로 전달
+  return renderPlainText(createStatementData(invoice, plays)) // 중간 데이터 구조를 인수로 전달
+
+  // 중간 데이터 생성을 전담
+  function createStatementData(invoice, plays) {
+    const statementData = {}
+    statementData.customer = invoice.customer // 고객 데이터를 중간 데이터로 옮김
+    statementData.performances = invoice.performances.map(enrichPerformance)
+    statementData.totalAmount = totalAmount(statementData)
+    statementData.totalVolumeCredits = totalVolumeCredits(statementData)
+    return statementData
+  }
 
   function enrichPerformance(aPerformance) {
     const result = Object.assign({}, aPerformance)
