@@ -52,10 +52,16 @@ export function statement(invoice, plays) {
     result += `${playFor(perf).name} : ${usd(amountFor(perf))} (${perf.audience}석)\n`
   }
 
-  let totalAmount = 0
-  for (let perf of invoice.performances) {
-    totalAmount += amountFor(perf)
+  function applySource() {
+    let totalAmount = 0
+    for (let perf of invoice.performances) {
+      totalAmount += amountFor(perf)
+    }
+
+    return totalAmount
   }
+
+  let totalAmount = applySource() // 함수 추출 & 임시 이름 부여
 
   function totalVolumeCredits() {
     let volumneCredits = 0 // 변수 선언(초기화)을 반복문 앞으로 이동 : 문장 슬라이드
