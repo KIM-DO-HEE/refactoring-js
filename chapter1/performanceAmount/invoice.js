@@ -1,7 +1,6 @@
 // 공연료 청구서 출력
 export function statement(invoice, plays) {
   let totalAmount = 0
-  let volumneCredits = 0
 
   function usd(aNumber) {
     return new Intl.NumberFormat('en-US', {
@@ -51,10 +50,15 @@ export function statement(invoice, plays) {
   }
 
   for (let perf of invoice.performances) {
-    volumneCredits += volumneCreditsFor(perf)
     // 청구내역 출력
     result += `${playFor(perf).name} : ${usd(amountFor(perf))} (${perf.audience}석)\n`
     totalAmount += amountFor(perf)
+  }
+
+  let volumneCredits = 0 // 변수 선언(초기화)을 반복문 앞으로 이동 : 문장 슬라이드
+  // 값 누적 로직을 별도 for로 분리
+  for (let perf of invoice.performances) {
+    volumneCredits += volumneCreditsFor(perf)
   }
 
   result += `총액: ${usd(totalAmount)}\n`
