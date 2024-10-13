@@ -1,5 +1,14 @@
 // 공연료 청구서 출력
 export function statement(invoice, plays) {
+  let result = `청구 내역 (고객명) : ${invoice.customer} \n`
+  for (let perf of invoice.performances) {
+    // 청구내역 출력
+    result += `${playFor(perf).name} : ${usd(amountFor(perf))} (${perf.audience}석)\n`
+  }
+  result += `총액: ${usd(totalAmount())}\n`
+  result += `적립 포인트: ${totalVolumeCredits()}점\n`
+  return result
+
   function usd(aNumber) {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -7,8 +16,6 @@ export function statement(invoice, plays) {
       minimumFractionDigits: 2
     }).format(aNumber / 100)
   }
-
-  let result = `청구 내역 (고객명) : ${invoice.customer} \n`
 
   function amountFor(aPerformance) {
     let result = 0
@@ -47,11 +54,6 @@ export function statement(invoice, plays) {
     return volumneCredits
   }
 
-  for (let perf of invoice.performances) {
-    // 청구내역 출력
-    result += `${playFor(perf).name} : ${usd(amountFor(perf))} (${perf.audience}석)\n`
-  }
-
   function totalAmount() {
     let result = 0
     for (let perf of invoice.performances) {
@@ -70,9 +72,4 @@ export function statement(invoice, plays) {
 
     return result
   }
-
-  result += `총액: ${usd(totalAmount())}\n`
-  result += `적립 포인트: ${totalVolumeCredits()}점\n`
-
-  return result
 }
