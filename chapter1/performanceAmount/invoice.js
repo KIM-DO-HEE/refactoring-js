@@ -2,6 +2,8 @@ export function statement(invoice, plays) {
   const statementData = {}
   statementData.customer = invoice.customer // 고객 데이터를 중간 데이터로 옮김
   statementData.performances = invoice.performances.map(enrichPerformance)
+  statementData.totalAmount = totalAmount(statementData)
+  statementData.totalVolumeCredits = totalVolumeCredits(statementData)
   return renderPlainText(statementData, plays) // 중간 데이터 구조를 인수로 전달
 
   function enrichPerformance(aPerformance) {
@@ -48,6 +50,25 @@ export function statement(invoice, plays) {
     if ('comedy' == aPerformance.play.type) volumneCredits += Math.floor(aPerformance.audience / 5)
     return volumneCredits
   }
+
+  function totalVolumeCredits(data) {
+    let result = 0 // 변수 선언(초기화)을 반복문 앞으로 이동 : 문장 슬라이드
+    // 값 누적 로직을 별도 for로 분리
+    for (let perf of data.performances) {
+      result += perf.volumneCredits
+    }
+
+    return result
+  }
+
+  function totalAmount(data) {
+    let result = 0
+    for (let perf of data.performances) {
+      result += perf.amount
+    }
+
+    return result
+  }
 }
 
 // 공연료 청구서 출력
@@ -58,8 +79,8 @@ export function renderPlainText(data, plays) {
     // 청구내역 출력
     result += `${perf.play.name} : ${usd(perf.amount)} (${perf.audience}석)\n`
   }
-  result += `총액: ${usd(totalAmount())}\n`
-  result += `적립 포인트: ${totalVolumeCredits()}점\n`
+  result += `총액: ${usd(data.totalAmount)}\n`
+  result += `적립 포인트: ${data.totalVolumeCredits}점\n`
   return result
 
   function usd(aNumber) {
@@ -68,24 +89,5 @@ export function renderPlainText(data, plays) {
       currency: 'USD',
       minimumFractionDigits: 2
     }).format(aNumber / 100)
-  }
-
-  function totalAmount() {
-    let result = 0
-    for (let perf of data.performances) {
-      result += perf.amount
-    }
-
-    return result
-  }
-
-  function totalVolumeCredits() {
-    let result = 0 // 변수 선언(초기화)을 반복문 앞으로 이동 : 문장 슬라이드
-    // 값 누적 로직을 별도 for로 분리
-    for (let perf of data.performances) {
-      result += perf.volumneCredits
-    }
-
-    return result
   }
 }
