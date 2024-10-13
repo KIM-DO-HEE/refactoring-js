@@ -3,7 +3,7 @@ export function statement(invoice, plays) {
   let totalAmount = 0
   let volumneCredits = 0
 
-  function format(aNumber) {
+  function usd(aNumber) {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -53,11 +53,11 @@ export function statement(invoice, plays) {
   for (let perf of invoice.performances) {
     volumneCredits += volumneCreditsFor(perf)
     // 청구내역 출력
-    result += `${playFor(perf).name} : ${format(amountFor(perf) / 100)} (${perf.audience}석)\n`
+    result += `${playFor(perf).name} : ${usd(amountFor(perf) / 100)} (${perf.audience}석)\n`
     totalAmount += amountFor(perf)
   }
 
-  result += `총액: ${format(totalAmount / 100)}\n`
+  result += `총액: ${usd(totalAmount / 100)}\n`
   result += `적립 포인트: ${volumneCredits}점\n`
 
   return result
