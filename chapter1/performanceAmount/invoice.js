@@ -52,7 +52,7 @@ export function statement(invoice, plays) {
     result += `${playFor(perf).name} : ${usd(amountFor(perf))} (${perf.audience}석)\n`
   }
 
-  function applySource() {
+  function totalAmount() {
     let totalAmount = 0
     for (let perf of invoice.performances) {
       totalAmount += amountFor(perf)
@@ -60,8 +60,6 @@ export function statement(invoice, plays) {
 
     return totalAmount
   }
-
-  let totalAmount = applySource() // 함수 추출 & 임시 이름 부여
 
   function totalVolumeCredits() {
     let volumneCredits = 0 // 변수 선언(초기화)을 반복문 앞으로 이동 : 문장 슬라이드
@@ -73,7 +71,7 @@ export function statement(invoice, plays) {
     return volumneCredits
   }
 
-  result += `총액: ${usd(totalAmount)}\n`
+  result += `총액: ${usd(totalAmount())}\n`
   result += `적립 포인트: ${totalVolumeCredits()}점\n`
 
   return result
