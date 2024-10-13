@@ -1,7 +1,5 @@
 // 공연료 청구서 출력
 export function statement(invoice, plays) {
-  let totalAmount = 0
-
   function usd(aNumber) {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -54,6 +52,7 @@ export function statement(invoice, plays) {
     result += `${playFor(perf).name} : ${usd(amountFor(perf))} (${perf.audience}석)\n`
   }
 
+  let totalAmount = 0
   for (let perf of invoice.performances) {
     totalAmount += amountFor(perf)
   }
