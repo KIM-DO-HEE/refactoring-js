@@ -7,33 +7,13 @@ export function statement(invoice, plays) {
   function enrichPerformance(aPerformance) {
     const result = Object.assign({}, aPerformance)
     result.play = playFor(result)
+    result.amount = amountFor(result)
     return result
   }
 
   // renderPlainText()의 중첩함수를 statement로 옮김
   function playFor(aPerformance) {
     return plays[aPerformance.playID]
-  }
-}
-
-// 공연료 청구서 출력
-export function renderPlainText(data, plays) {
-  // 중간 데이터 구조를 인수로 전달
-  let result = `청구 내역 (고객명) : ${data.customer} \n`
-  for (let perf of data.performances) {
-    // 청구내역 출력
-    result += `${perf.play.name} : ${usd(amountFor(perf))} (${perf.audience}석)\n`
-  }
-  result += `총액: ${usd(totalAmount())}\n`
-  result += `적립 포인트: ${totalVolumeCredits()}점\n`
-  return result
-
-  function usd(aNumber) {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-    }).format(aNumber / 100)
   }
 
   function amountFor(aPerformance) {
@@ -58,6 +38,27 @@ export function renderPlainText(data, plays) {
 
     return result
   }
+}
+
+// 공연료 청구서 출력
+export function renderPlainText(data, plays) {
+  // 중간 데이터 구조를 인수로 전달
+  let result = `청구 내역 (고객명) : ${data.customer} \n`
+  for (let perf of data.performances) {
+    // 청구내역 출력
+    result += `${perf.play.name} : ${usd(perf.amount)} (${perf.audience}석)\n`
+  }
+  result += `총액: ${usd(totalAmount())}\n`
+  result += `적립 포인트: ${totalVolumeCredits()}점\n`
+  return result
+
+  function usd(aNumber) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+    }).format(aNumber / 100)
+  }
 
   function volumneCreditsFor(aPerformance) {
     let volumneCredits = 0
@@ -71,7 +72,7 @@ export function renderPlainText(data, plays) {
   function totalAmount() {
     let result = 0
     for (let perf of data.performances) {
-      result += amountFor(perf)
+      result += perf.amount
     }
 
     return result
