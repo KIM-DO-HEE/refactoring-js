@@ -55,11 +55,17 @@ export function statement(invoice, plays) {
     totalAmount += amountFor(perf)
   }
 
-  let volumneCredits = 0 // 변수 선언(초기화)을 반복문 앞으로 이동 : 문장 슬라이드
-  // 값 누적 로직을 별도 for로 분리
-  for (let perf of invoice.performances) {
-    volumneCredits += volumneCreditsFor(perf)
+  function totalVolumeCredits() {
+    let volumneCredits = 0 // 변수 선언(초기화)을 반복문 앞으로 이동 : 문장 슬라이드
+    // 값 누적 로직을 별도 for로 분리
+    for (let perf of invoice.performances) {
+      volumneCredits += volumneCreditsFor(perf)
+    }
+
+    return volumneCredits
   }
+
+  let volumneCredits = totalVolumeCredits()
 
   result += `총액: ${usd(totalAmount)}\n`
   result += `적립 포인트: ${volumneCredits}점\n`
