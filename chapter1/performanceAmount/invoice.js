@@ -52,22 +52,11 @@ export function statement(invoice, plays) {
   }
 
   function totalVolumeCredits(data) {
-    let result = 0 // 변수 선언(초기화)을 반복문 앞으로 이동 : 문장 슬라이드
-    // 값 누적 로직을 별도 for로 분리
-    for (let perf of data.performances) {
-      result += perf.volumneCredits
-    }
-
-    return result
+    return data.performances.reduce((total, p) => total + p.volumneCredits, 0)
   }
 
   function totalAmount(data) {
-    let result = 0
-    for (let perf of data.performances) {
-      result += perf.amount
-    }
-
-    return result
+    return data.performances.reduce((total, p) => total + p.amount, 0)
   }
 }
 
