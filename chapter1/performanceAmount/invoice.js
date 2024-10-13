@@ -37,13 +37,17 @@ export function statement(invoice, plays) {
     return plays[aPerformance.playID]
   }
 
-  for (let perf of invoice.performances) {
+  function volumneCreditsFor(perf) {
+    let volumneCredits = 0
     // 포인트 적립
     volumneCredits += Math.max(perf.audience - 30, 0)
-
     // 희극관객 5명마다 추가 포인트를 제공
     if ('comedy' == playFor(perf).type) volumneCredits += Math.floor(perf.audience / 5)
+    return volumneCredits
+  }
 
+  for (let perf of invoice.performances) {
+    volumneCredits += volumneCreditsFor(perf)
     // 청구내역 출력
     result += `${playFor(perf).name} : ${format(amountFor(perf) / 100)} (${perf.audience}석)\n`
     totalAmount += amountFor(perf)
