@@ -1,9 +1,12 @@
 export function statement(invoice, plays) {
-  return renderPlainText(invoice, plays)
+  const statementData = {}
+  statementData.customer = invoice.customer // 고객 데이터를 중간 데이터로 옮김
+  return renderPlainText(statementData, invoice, plays) // 중간 데이터 구조를 인수로 전달
 }
 
 // 공연료 청구서 출력
-export function renderPlainText(invoice, plays) {
+export function renderPlainText(data, invoice, plays) {
+  // 중간 데이터 구조를 인수로 전달
   let result = `청구 내역 (고객명) : ${invoice.customer} \n`
   for (let perf of invoice.performances) {
     // 청구내역 출력
