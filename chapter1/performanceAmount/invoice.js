@@ -3,12 +3,15 @@ export function statement(invoice, plays) {
   let totalAmount = 0
   let volumneCredits = 0
 
+  function format(aNumber) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+    }).format
+  }
+
   let result = `청구 내역 (고객명) : ${invoice.customer} \n`
-  const format = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2
-  }).format
 
   function amountFor(aPerformance) {
     let result = 0
