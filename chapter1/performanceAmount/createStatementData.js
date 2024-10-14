@@ -1,47 +1,4 @@
-// 공연기 계산기
-class PerformanceCalculator {
-  constructor(aPerformance, aPlay) {
-    this.performance = aPerformance
-    this.play = aPlay
-  }
-
-  get amount() {
-    throw new Error('서브클래스에서 처리하도록 설계되었습니다')
-  }
-
-  get volumneCredits() {
-    let result = 0
-    // 포인트 적립
-    result += Math.max(this.performance.audience - 30, 0)
-    // 희극관객 5명마다 추가 포인트를 제공
-    if ('comedy' == this.play.type) result += Math.floor(this.performance.audience / 5)
-    return result
-  }
-}
-
-class TragedyCalculator extends PerformanceCalculator {
-  get amount() {
-    let result = 40000
-    if (this.performance.audience > 30) {
-      result += 1000 * (this.performance.audience - 30)
-    }
-
-    return result
-  }
-}
-
-class ComedyCalculator extends PerformanceCalculator {
-  get amount() {
-    let result = 30000
-    if (this.performance.audience > 20) {
-      result += 10000 + 500 * (this.performance.audience - 20)
-    }
-    result += 300 * this.performance.audience
-    return result
-  }
-}
-
-function createPerformanceCalculator(aPerformance, aPlay) {
+export function createPerformanceCalculator(aPerformance, aPlay) {
   switch (aPlay.type) {
     case 'tragedy':
       return new TragedyCalculator(aPerformance, aPlay)
@@ -94,5 +51,48 @@ export default function createStatementData(invoice, plays) {
 
   function totalAmount(data) {
     return data.performances.reduce((total, p) => total + p.amount, 0)
+  }
+}
+
+// 공연기 계산기
+class PerformanceCalculator {
+  constructor(aPerformance, aPlay) {
+    this.performance = aPerformance
+    this.play = aPlay
+  }
+
+  get amount() {
+    throw new Error('서브클래스에서 처리하도록 설계되었습니다')
+  }
+
+  get volumneCredits() {
+    return Math.max(this.performance.audience - 30, 0)
+  }
+}
+
+class TragedyCalculator extends PerformanceCalculator {
+  get amount() {
+    let result = 40000
+    if (this.performance.audience > 30) {
+      result += 1000 * (this.performance.audience - 30)
+    }
+
+    return result
+  }
+}
+
+class ComedyCalculator extends PerformanceCalculator {
+  get amount() {
+    let result = 30000
+    if (this.performance.audience > 20) {
+      result += 10000 + 500 * (this.performance.audience - 20)
+    }
+    result += 300 * this.performance.audience
+    return result
+  }
+
+  get volumneCredits() {
+    // 희극관객 5명마다 추가 포인트를 제공
+    return super.volumneCredits + Math.floor(this.performance.audience / 5)
   }
 }
